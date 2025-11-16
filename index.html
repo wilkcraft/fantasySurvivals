@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fantasy Survivals</title>
+    <style>
+      :root {
+        --color-primary: #3498db;
+        --color-secondary: #2c3e50;
+        --color-background: #ecf0f1;
+        --color-text: #333333;
+        --color-button: #2ecc71;
+        --color-button-hover: #27ae60;
+        --color-navbar: #333;
+        --color-navbar-hover: #1abc9c;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--color-background);
+        color: var(--color-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Barra de navegación */
+      .navbar {
+        position: sticky;
+        top: 0;
+        background: linear-gradient(90deg, #2c3e50, #1c8082);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        padding: 10px 0;
+        text-align: center;
+        z-index: 1000;
+      }
+
+      .navbar a {
+        display: inline-block;
+        color: white;
+        padding: 14px 20px;
+        text-decoration: none;
+        font-size: 17px;
+        transition: transform 0.2s ease, background-color 0.3s ease;
+        cursor: pointer;
+      }
+
+      .navbar a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: scale(1.05);
+      }
+
+      /* Botón menú hamburguesa (oculto en escritorio) */
+      .menu-toggle {
+        display: none;
+        font-size: 24px;
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        left: 20px;
+        top: 10px;
+      }
+
+      /* Menú móvil */
+      .navbar-links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .navbar.active .navbar-links {
+        display: block;
+        text-align: left;
+        background: #2c3e50;
+      }
+
+      /* Contenido principal */
+      .main-content {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .content-section {
+        display: none;
+        text-align: center;
+        max-width: 800px;
+        width: 100%;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      h1 {
+        color: var(--color-secondary);
+        font-size: 2.8em;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        color: var(--color-primary);
+        font-size: 1.5em;
+        margin-bottom: 30px;
+      }
+
+      p {
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .plugins-list {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+      }
+
+      .plugins-list li {
+        background-color: white;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        text-align: left;
+      }
+
+      .plugins-list strong {
+        color: var(--color-primary);
+      }
+
+      .btn-shop {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: var(--color-button);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      .btn-shop:hover {
+        background-color: var(--color-button-hover);
+      }
+
+      /* Tabla de comandos */
+      .command-section h2 {
+        color: var(--color-secondary);
+        margin-top: 40px;
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 10px;
+        text-align: left;
+      }
+
+      .command-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: white;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        text-align: left;
+      }
+
+      .command-table th,
+      .command-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .command-table th {
+        background-color: var(--color-primary);
+        color: white;
+        font-weight: bold;
+      }
+
+      .command-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .command-table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      /* Popup */
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      }
+
+      .popup {
+        background: white;
+        border-radius: 12px;
+        padding: 25px 30px;
+        max-width: 400px;
+        width: 90%;
+        text-align: left;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        animation: popupIn 0.25s ease;
+      }
+
+      @keyframes popupIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .popup h2 {
+        color: var(--color-primary);
+        margin-bottom: 15px; /* Espacio debajo del título */
+        text-align: center; /* Centra el texto h2 */
+        border-bottom: 2px solid var(--color-primary); /* Línea debajo (subrayado) */
+        padding-bottom: 5px;
+      }
+
+      .popup p {
+        margin: 8px 0;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .popup button.copy-btn {
+        background-color: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 4px 8px;
+        font-size: 0.9em;
+        cursor: pointer;
+        margin-left: 8px;
+        transition: all 0.3s ease;
+        border: 1px solid var(--color-primary);
+      }
+
+      .popup button.copy-btn:hover {
+        background-color: white;
+        color: black;
+      }
+
+      .popup-close {
+        float: right;
+        font-size: 1.2em;
+        cursor: pointer;
+        color: #555;
+        background: none;
+        border: none;
+      }
+
+      .copied {
+        color: var(--color-button);
+        font-size: 0.85em;
+        margin-left: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Barra de Navegación -->
+    <div class="navbar" id="navbar">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="navbar-links">
+        <a onclick="showSection('home')">Inicio</a>
+        <a onclick="showSection('precios')">Precios Tienda</a>
+        <a onclick="showSection('comandos')">Comandos</a>
+        <a onclick="showSection('plugins')">Plugins</a>
+      </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+      <!-- Sección de Inicio -->
+      <div id="home" class="content-section active">
+        <h1>Fantasy Survivals</h1>
+        <p class="subtitle">Servidor de Minecraft Multiplataforma</p>
+
+        <p>
+          ¡Bienvenido a <strong>Fantasy Survivals</strong>! Un servidor survival
+          único diseñado para ofrecerte la mejor experiencia.
+        </p>
+
+        <p>
+          Compatible con <strong>Java y Bedrock</strong>.<br />
+          Versión mínima requerida: <strong>1.21.1+</strong>
+        </p>
+
+        <p>
+          ¡Explora un mundo lleno de posibilidades, economía, protección de
+          zonas y mucho más!
+        </p>
+
+        <!-- BOTÓN CAMBIADO -->
+        <a id="verIP" class="btn-shop">Ver IP</a>
+      </div>
+
+      <!-- Sección de Precios Tienda -->
+      <div id="precios" class="content-section">
+        <h1>Precios de la Tienda</h1>
+        <p>
+          Consulta los precios actualizados de compra y venta de los ítems en
+          cada categoría.
+        </p>
+        <div id="categorias-container"></div>
+      </div>
+
+      <!-- Sección de Comandos -->
+      <div id="comandos" class="content-section">
+        <h1>Comandos del Servidor Fantasy Survivals</h1>
+        <p>
+          Aquí están todos los comandos útiles para los jugadores, organizados
+          por plugin:
+        </p>
+
+        <input
+          type="text"
+          id="search-comandos"
+          placeholder="Buscar comando, descripción o categoría..."
+          style="
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            font-size: 1.1em;
+            outline: none;
+          "
+        />
+
+        <div id="comandos-container"></div>
+      </div>
+
+      <!-- Sección de Plugins -->
+      <div id="plugins" class="content-section">
+        <h1>Plugins y sus Funciones</h1>
+        <p>
+          Aquí tienes una lista detallada de los plugins que utilizamos para
+          mejorar tu aventura en Fantasy Survivals.
+        </p>
+
+        <ul class="plugins-list">
+          <li>
+            <strong>EssentialsX:</strong> Comandos básicos de jugador (/home,
+            /spawn, /tpa), economía base, kits y chat personalizado.
+          </li>
+          <li>
+            <strong>EconomyShopGUI:</strong> Una interfaz gráfica intuitiva para
+            comprar y vender ítems fácilmente con la moneda del juego.
+          </li>
+          <li>
+            <strong>LuckPerms:</strong> Sistema avanzado de permisos para roles
+            de jugador y staff.
+          </li>
+          <li>
+            <strong>Vault:</strong> Gestión centralizada de la economía y
+            permisos para que los plugins interactúen entre sí.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- POPUP IP -->
+    <div class="popup-overlay" id="popupOverlay">
+      <div class="popup">
+        <button class="popup-close" id="closePopup">&times;</button>
+        <h2>Java</h2>
+        <p>
+          IP: 46.26.230.23:13467
+          <button
+            class="copy-btn"
+            onclick="copyText('46.26.230.23:13467', this)"
+          >
+            Copiar
+          </button>
+        </p>
+        <h2>Bedrock</h2>
+        <p>
+          IP: 46.26.230.23
+          <button class="copy-btn" onclick="copyText('46.26.230.23', this)">
+            Copiar
+          </button>
+        </p>
+        <p>
+          Puerto: 13467
+          <button class="copy-btn" onclick="copyText('13467', this)">
+            Copiar
+          </button>
+        </p>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // --- Mostrar secciones (ahora persiste la sección activa en localStorage) ---
+      function showSection(sectionId, options = {}) {
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        const target = document.getElementById(sectionId);
+        if (!target) return;
+        target.classList.add("active");
+        document.getElementById("navbar").classList.remove("active");
+
+        // Guardar la sección activa en localStorage
+        try {
+          localStorage.setItem("activeSection", sectionId);
+        } catch (e) {
+          console.warn("No se pudo guardar la sección en localStorage:", e);
+        }
+
+        // Opcional: actualizar el hash de la URL sin hacer scroll (útil para compartir/enlaces)
+        if (!options.skipHash) {
+          history.replaceState(null, "", "#" + sectionId);
+        }
+      }
+
+      // --- Popup ---
+      const popup = document.getElementById("popupOverlay");
+      const openBtn = document.getElementById("verIP");
+      const closeBtn = document.getElementById("closePopup");
+
+      openBtn.addEventListener("click", () => {
+        popup.style.display = "flex";
+      });
+      closeBtn.addEventListener("click", () => {
+        popup.style.display = "none";
+      });
+      popup.addEventListener("click", (e) => {
+        if (e.target === popup) popup.style.display = "none";
+      });
+
+      // --- Copiar texto ---
+      function copyText(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+          const span = document.createElement("span");
+          span.className = "copied";
+          span.textContent = "Copiado ✅";
+          btn.after(span);
+          setTimeout(() => span.remove(), 1500);
+        });
+      }
+
+      // --- Menú hamburguesa ---
+      document.addEventListener("DOMContentLoaded", () => {
+        const menuToggle = document.getElementById("menuToggle");
+        const navbar = document.getElementById("navbar");
+        menuToggle.addEventListener("click", () => {
+          navbar.classList.toggle("active");
+        });
+      });
+
+      // --- Generar tablas de comandos (como antes) ---
+      const datosComandos = {
+        "EssentialsX (Comandos básicos)": [
+          {
+            comando: "/help",
+            descripcion: "Muestra la lista de comandos de Essentials.",
+          },
+          {
+            comando: "/list",
+            descripcion:
+              "Muestra la lista de jugadores conectados actualmente en el servidor.",
+          },
+          {
+            comando: "/msg [jugador] [mensaje]",
+            descripcion: "Envía un mensaje privado a otro jugador.",
+          },
+          {
+            comando: "/reply [mensaje]",
+            descripcion:
+              "Responde rápidamente al último jugador que te envió un mensaje privado.",
+          },
+          {
+            comando: "/mail send [jugador] [mensaje]",
+            descripcion: "Envía un mensaje de correo (offline) a un jugador.",
+          },
+          {
+            comando: "/tpa [jugador]",
+            descripcion: "Solicita teletransportarse a otro jugador.",
+          },
+          {
+            comando: "/tpaccept",
+            descripcion: "Acepta solicitudes de teletransporte.",
+          },
+          {
+            comando: "/tpdeny",
+            descripcion: "Rechaza solicitudes de teletransporte.",
+          },
+          {
+            comando: "/tpacancel",
+            descripcion: "Cancela tus solicitudes de teletransporte.",
+          },
+          { comando: "/spawn", descripcion: "Te lleva al punto de spawn." },
+          {
+            comando: "/warp [nombre]",
+            descripcion:
+              "Te teletransporta a ubicaciones públicas predefinidas por los administradores del servidor.",
+          },
+          { comando: "/back", descripcion: "Vuelve al sitio donde moriste." },
+          { comando: "/sethome [nombre]", descripcion: "Guarda un hogar." },
+          { comando: "/home [nombre]", descripcion: "Te lleva a un hogar." },
+          { comando: "/delhome [nombre]", descripcion: "Elimina un hogar." },
+          { comando: "/delhome [nombre]", descripcion: "Elimina un hogar." },
+          {
+            comando: "/balance",
+            descripcion:
+              "Muestra la cantidad de dinero que tienes en el juego.",
+          },
+          {
+            comando: "/pay [jugador] [cantidad]",
+            descripcion: "Transfiere dinero a otro jugador.",
+          },
+          {
+            comando: "/balancetop",
+            descripcion: "Lista de los jugadores con más dinero.",
+          },
+          {
+            comando: "/afk",
+            descripcion:
+              "Te marca como 'Ausente del teclado' (AFK) y notifica a otros jugadores.",
+          },
+          {
+            comando: "/worth [item]",
+            descripcion:
+              "Muestra el valor de venta o compra de un artículo específico o del que tienes en la mano.",
+          },
+          {
+            comando: "/recipe [item]",
+            descripcion: "Muestra la receta de un ítem específico.",
+          },
+          {
+            comando: "/ignore [jugador]",
+            descripcion: "Ignorar mensajes de un jugador.",
+          },
+          {
+            comando: "/unignore [jugador]",
+            descripcion: "Dejar de ignorar a un jugador.",
+          },
+        ],
+        "Economy Shop GUI (Tienda)": [
+          { comando: "/shop", descripcion: "Abre la tienda." },
+        ],
+        "Nexus Auction House (Subastas)": [
+          { comando: "/ah", descripcion: "Abre el panel de subastas." },
+          {
+            comando: "/ah sell [precio]",
+            descripcion: "Vende el artículo de tu mano por el dinero fijado.",
+          },
+        ],
+        "Protection Stones (Proteción de zonas)": [
+          {
+            comando: "/ps info",
+            descripcion:
+              "Muestra información detallada sobre la zona en la que te encuentras.",
+          },
+          {
+            comando: "/ps home [nombre]",
+            descripcion: "Te lleva a tu protección.",
+          },
+          {
+            comando: "/ps name [nombre]",
+            descripcion:
+              "Puedes cambiar el nombre de la zona en la que estás si es tuya.",
+          },
+          {
+            comando: "/ps view",
+            descripcion:
+              "Muestra visualmente los límites de tu zona (con barreras u otro bloque temporal).",
+          },
+          {
+            comando: "/ps add [jugador]",
+            descripcion:
+              "Añade a un jugador como miembro de tu zona. Los miembros pueden construir/romper.",
+          },
+          {
+            comando: "/ps remove [jugador]",
+            descripcion:
+              "Elimina a un jugador de la lista de miembros de tu zona.",
+          },
+          {
+            comando: "/ps rent lease [cantidad] [cada cuanto se paga]",
+            descripcion: "Alquilas tu zona actual, y al final se podrá vender.",
+          },
+          { comando: "/ps rent stoplease", descripcion: "Cancela el lease." },
+          {
+            comando: "/ps rent rent [cantidad] [cada cuanto se paga]",
+            descripcion: "Alquilas tu zona actual.",
+          },
+          { comando: "/ps rent stoprent", descripcion: "Cancela el alquiler." },
+          {
+            comando: "/ps sell stop",
+            descripcion: "Vende tu zona actual.",
+          },
+          {
+            comando: "/ps sell stop [cantidad]",
+            descripcion: "Cancela la venta de tu zona actual.",
+          },
+          {
+            comando: "/ps buy",
+            descripcion: "Puedes comprar la zona actual si está en venta.",
+          },
+        ],
+      };
+
+      function generarTablasComandos(filtro = "") {
+        const container = document.getElementById("comandos-container");
+        container.innerHTML = ""; // limpiar
+
+        const filtroLower = filtro.toLowerCase();
+
+        for (const categoria in datosComandos) {
+          const comandos = datosComandos[categoria];
+
+          // Filtrado:
+          const coinciden = comandos.filter((item) => {
+            const cmd = item.comando.toLowerCase();
+            const desc = item.descripcion.toLowerCase();
+            const cat = categoria.toLowerCase();
+
+            return (
+              cmd.includes(filtroLower) ||
+              desc.includes(filtroLower) ||
+              cat.includes(filtroLower)
+            );
+          });
+
+          if (coinciden.length === 0) continue; // saltar categorías sin coincidencias
+
+          // Crear título
+          const title = document.createElement("h2");
+          title.textContent = categoria;
+          container.appendChild(title);
+
+          // Crear tabla
+          const table = document.createElement("table");
+          table.classList.add("command-table");
+          table.innerHTML = `
+        <thead><tr><th>Comando</th><th>Descripción</th></tr></thead>
+        <tbody></tbody>
+      `;
+
+          const tbody = table.querySelector("tbody");
+
+          coinciden.forEach((item) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td><code>${item.comando}</code></td><td>${item.descripcion}</td>`;
+            tbody.appendChild(row);
+          });
+
+          container.appendChild(table);
+        }
+
+        if (container.innerHTML.trim() === "") {
+          container.innerHTML = "<p>No se encontraron comandos.</p>";
+        }
+      }
+
+      // --- Código para restaurar sección activa y posición de scroll al recargar ---
+      document.addEventListener("DOMContentLoaded", () => {
+        // Generar tablas y otros inicializadores
+        generarTablasComandos();
+
+        // Restaurar sección: prioridad -> location.hash -> localStorage -> default 'home'
+        let initialSection = "home";
+        if (location.hash) {
+          const hashId = location.hash.replace("#", "");
+          if (document.getElementById(hashId)) initialSection = hashId;
+        } else {
+          try {
+            const saved = localStorage.getItem("activeSection");
+            if (saved && document.getElementById(saved)) initialSection = saved;
+          } catch (e) {
+            console.warn("Error leyendo localStorage:", e);
+          }
+        }
+
+        // Mostrar la sección sin cambiar el hash (evitamos doble replaceState)
+        showSection(initialSection, { skipHash: true });
+
+        // Restaurar scroll (opcional): guardamos poco más abajo en el código al hacer scroll
+        try {
+          const savedScroll = sessionStorage.getItem(
+            "savedScroll_" + initialSection
+          );
+          if (savedScroll) {
+            window.scrollTo(0, parseInt(savedScroll, 10) || 0);
+          }
+        } catch (e) {
+          console.warn("No se pudo restaurar el scroll:", e);
+        }
+      });
+
+      // --- Buscador de comandos ---
+      document
+        .getElementById("search-comandos")
+        .addEventListener("input", (e) => {
+          generarTablasComandos(e.target.value);
+        });
+
+      // Guardar posición de scroll por sección antes de unload (para mantener posición exacta)
+      window.addEventListener("beforeunload", () => {
+        try {
+          const active = localStorage.getItem("activeSection") || "home";
+          sessionStorage.setItem(
+            "savedScroll_" + active,
+            String(window.scrollY || 0)
+          );
+        } catch (e) {
+          // no pasa nada si no se puede guardar
+        }
+      });
+    </script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        getDocs,
+        collection,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      // --- Configuración Firebase ---
+      const firebaseConfig = {
+        apiKey: "AIzaSyCEO2neWjVomtBuMcyAEyZl0nHOQFt8yh0",
+        authDomain: "cloxion-4a54d.firebaseapp.com",
+        projectId: "cloxion-4a54d",
+        storageBucket: "cloxion-4a54d.firebasestorage.app",
+        messagingSenderId: "187911113023",
+        appId: "1:187911113023:web:bd58e068f5253f6f706b8a",
+        measurementId: "G-GHJCT42SFG",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      let unsubscribe = null; // Para detener el listener anterior al cambiar de categoría
+
+      // --- Crear dropdown dinámico ---
+      async function crearDropdown() {
+        const contenedor = document.getElementById("categorias-container");
+        contenedor.innerHTML = "<p>Cargando categorías...</p>";
+
+        try {
+          const snapshot = await getDocs(collection(db, "precios"));
+          const categorias = [];
+          snapshot.forEach((doc) => categorias.push(doc.id));
+
+          if (categorias.length === 0) {
+            contenedor.innerHTML = "<p>No hay categorías en Firestore.</p>";
+            return;
+          }
+
+          // Crear dropdown con estilo
+          const dropdown = document.createElement("select");
+          dropdown.id = "categoria-select";
+          dropdown.innerHTML = categorias
+            .map(
+              (cat) =>
+                `<option value="${cat}">${
+                  cat.charAt(0).toUpperCase() + cat.slice(1)
+                }</option>`
+            )
+            .join("");
+
+          // Aplicar estilo visual coherente
+          dropdown.style.padding = "10px 15px";
+          dropdown.style.fontSize = "1.1em";
+          dropdown.style.border = "2px solid var(--color-primary)";
+          dropdown.style.borderRadius = "10px";
+          dropdown.style.backgroundColor = "white";
+          dropdown.style.color = "var(--color-secondary)";
+          dropdown.style.fontWeight = "bold";
+          dropdown.style.cursor = "pointer";
+          dropdown.style.margin = "15px auto 25px auto";
+          dropdown.style.display = "block";
+          dropdown.style.transition = "all 0.3s ease";
+
+          // Crear contenedor de la tabla
+          const tablaDiv = document.createElement("div");
+          tablaDiv.id = "tabla-precios";
+
+          contenedor.innerHTML = "";
+          contenedor.appendChild(dropdown);
+          contenedor.appendChild(tablaDiv);
+
+          // Escuchar la primera categoría
+          escucharPrecios(categorias[0]);
+
+          // Cambiar categoría
+          dropdown.addEventListener("change", (e) => {
+            escucharPrecios(e.target.value);
+          });
+        } catch (error) {
+          console.error("Error cargando categorías:", error);
+          contenedor.innerHTML =
+            "<p style='color:red;'>Error al cargar categorías.</p>";
+        }
+      }
+
+      // --- Escuchar cambios en Firestore en tiempo real ---
+      function escucharPrecios(categoria) {
+        const tablaDiv = document.getElementById("tabla-precios");
+        tablaDiv.innerHTML = "<p>Cargando precios...</p>";
+
+        // Si ya había un listener activo, lo detenemos
+        if (unsubscribe) unsubscribe();
+
+        const docRef = doc(db, "precios", categoria);
+
+        unsubscribe = onSnapshot(
+          docRef,
+          (docSnap) => {
+            if (!docSnap.exists()) {
+              tablaDiv.innerHTML =
+                "<p>No se encontraron precios para esta categoría.</p>";
+              return;
+            }
+
+            const data = docSnap.data();
+            const texto = Object.values(data)[0];
+            const partes = texto.trim().split(/\s+/);
+            const items = [];
+
+            for (let i = 0; i < partes.length; i += 3) {
+              const nombre = partes[i];
+              const compra = parseFloat(partes[i + 1]);
+              const venta = parseFloat(partes[i + 2]);
+              items.push({ nombre, compra, venta });
+            }
+
+            const tabla = document.createElement("table");
+            tabla.classList.add("command-table");
+            tabla.innerHTML = `
+          <thead>
+            <tr>
+              <th>Ítem</th>
+              <th>Precio Compra</th>
+              <th>Precio Venta</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items
+              .map(
+                (i) => `
+                <tr>
+                  <td>${i.nombre.replaceAll("_", " ")}</td>
+                  <td>${i.compra.toFixed(2)}</td>
+                  <td>${i.venta.toFixed(2)}</td>
+                </tr>`
+              )
+              .join("")}
+          </tbody>
+        `;
+            tablaDiv.innerHTML = "";
+            tablaDiv.appendChild(tabla);
+          },
+          (error) => {
+            console.error("Error en tiempo real:", error);
+            tablaDiv.innerHTML =
+              "<p style='color:red;'>Error al recibir actualizaciones.</p>";
+          }
+        );
+      }
+
+      // --- Cuando se abra la sección "Precios Tienda" ---
+      document
+        .querySelector("a[onclick=\"showSection('precios')\"]")
+        .addEventListener("click", crearDropdown);
+    </script>
+  </body>
+</html>
