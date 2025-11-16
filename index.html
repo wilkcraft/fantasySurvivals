@@ -273,6 +273,16 @@
         font-size: 0.85em;
         margin-left: 6px;
       }
+
+      .code-copy {
+        cursor: pointer;
+        color: var(--color-primary);
+        font-weight: bold;
+      }
+
+      .code-copy:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -662,7 +672,15 @@
 
           coinciden.forEach((item) => {
             const row = document.createElement("tr");
-            row.innerHTML = `<td><code>${item.comando}</code></td><td>${item.descripcion}</td>`;
+            row.innerHTML = `
+  <td>
+    <code class="code-copy" onclick="copyText('${item.comando}', this)">
+      ${item.comando}
+    </code>
+  </td>
+  <td>${item.descripcion}</td>
+`;
+
             tbody.appendChild(row);
           });
 
@@ -695,6 +713,13 @@
 
         // Mostrar la sección sin cambiar el hash (evitamos doble replaceState)
         showSection(initialSection, { skipHash: true });
+
+        // Si la sección inicial es "precios", cargar la tabla automáticamente
+        if (initialSection === "precios") {
+          setTimeout(() => {
+            crearDropdown();
+          }, 0);
+        }
 
         // Restaurar scroll (opcional): guardamos poco más abajo en el código al hacer scroll
         try {
