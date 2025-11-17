@@ -283,6 +283,135 @@
       .code-copy:hover {
         text-decoration: underline;
       }
+
+      .search-bar {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 25px;
+        border: 2px solid var(--color-primary);
+        border-radius: 10px;
+        font-size: 1.1em;
+        outline: none;
+      }
+      .countdown {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      .countdown > div {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        width: 80px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .countdown span {
+        display: block;
+        font-size: 2em;
+        font-weight: bold;
+      }
+
+      .countdown small {
+        font-size: 0.8em;
+      }
+
+      /* 🌙 MODO OSCURO AUTOMÁTICO */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-primary: #5dade2;
+          --color-secondary: #d5d8dc;
+          --color-background: #121212;
+          --color-text: #eaeaea;
+          --color-button: #27ae60;
+          --color-button-hover: #1e8449;
+          --color-navbar: #0d0d0d;
+          --color-navbar-hover: #117a65;
+        }
+
+        body {
+          background-color: var(--color-background);
+          color: var(--color-text);
+        }
+
+        .navbar {
+          background: linear-gradient(90deg, #0b1f33, #0e3458) !important;
+        }
+
+        .navbar a {
+          color: #dce6f0 !important;
+        }
+
+        .navbar a:hover {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .content-section {
+          color: var(--color-text);
+        }
+
+        .plugins-list li,
+        .command-table,
+        .command-table tr,
+        .popup {
+          background-color: #1e1e1e !important;
+          color: #eaeaea !important;
+        }
+
+        .command-table th {
+          background-color: #2e86c1 !important;
+          color: white !important;
+        }
+
+        .command-table tr:nth-child(even) {
+          background-color: #2a2a2a !important;
+        }
+
+        .command-table tr:hover {
+          background-color: #333 !important;
+        }
+
+        .btn-shop {
+          background-color: var(--color-button);
+          color: white;
+        }
+
+        .btn-shop:hover {
+          background-color: var(--color-button-hover);
+        }
+
+        .search-bar {
+          background-color: #1e1e1e;
+          color: white;
+          border: 2px solid var(--color-primary);
+        }
+
+        select#categoria-select {
+          background-color: #1e1e1e !important;
+          color: white !important;
+          border: 2px solid var(--color-primary) !important;
+        }
+
+        .popup {
+          background-color: #1e1e1e !important;
+          color: #fff !important;
+        }
+
+        .popup button.copy-btn {
+          background-color: var(--color-primary);
+          border: 1px solid var(--color-primary);
+        }
+
+        .popup button.copy-btn:hover {
+          background-color: white;
+          color: black;
+        }
+
+        .countdown > div {
+          background-color: #2e86c1 !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -291,7 +420,7 @@
       <button class="menu-toggle" id="menuToggle">☰</button>
       <div class="navbar-links">
         <a onclick="showSection('home')">Inicio</a>
-        <a onclick="showSection('precios')">Precios Tienda</a>
+        <a onclick="showSection('precios')">Precios</a>
         <a onclick="showSection('comandos')">Comandos</a>
         <a onclick="showSection('plugins')">Plugins</a>
       </div>
@@ -321,6 +450,41 @@
 
         <!-- BOTÓN CAMBIADO -->
         <a id="verIP" class="btn-shop">Ver IP</a>
+
+        <p class="subtitle">
+          El servidor se abrirá como muy tarde el
+          <strong>29 de noviembre</strong>
+        </p>
+        <p>Cuenta atrás:</p>
+        <div class="countdown">
+          <div>
+            <span id="days">00</span>
+            <small>Días</small>
+          </div>
+          <div>
+            <span id="hours">00</span>
+            <small>Horas</small>
+          </div>
+          <div>
+            <span id="minutes">00</span>
+            <small>Minutos</small>
+          </div>
+          <div>
+            <span id="seconds">00</span>
+            <small>Segundos</small>
+          </div>
+        </div>
+        <p
+          id="countdown-message"
+          style="
+            display: none;
+            color: green;
+            font-size: 1.2em;
+            margin-top: 20px;
+          "
+        >
+          ¡El día ha llegado!
+        </p>
       </div>
 
       <!-- Sección de Precios Tienda -->
@@ -330,30 +494,34 @@
           Consulta los precios actualizados de compra y venta de los ítems en
           cada categoría.
         </p>
+        <p>
+          De momento solo hay estas categorías, se irán añadiendo más conforme
+          pase el tiempo
+        </p>
+
+        <input
+          type="text"
+          id="search-precio"
+          class="search-bar"
+          placeholder="Buscar ítem o precio"
+        />
+
         <div id="categorias-container"></div>
       </div>
 
       <!-- Sección de Comandos -->
       <div id="comandos" class="content-section">
-        <h1>Comandos del Servidor Fantasy Survivals</h1>
+        <h1>Comandos disponibles para los jugadores</h1>
         <p>
           Aquí están todos los comandos útiles para los jugadores, organizados
-          por plugin:
+          por plugins:
         </p>
 
         <input
           type="text"
           id="search-comandos"
-          placeholder="Buscar comando, descripción o categoría..."
-          style="
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 25px;
-            border: 2px solid var(--color-primary);
-            border-radius: 10px;
-            font-size: 1.1em;
-            outline: none;
-          "
+          class="search-bar"
+          placeholder="Buscar comando, descripción o categoría"
         />
 
         <div id="comandos-container"></div>
@@ -366,6 +534,12 @@
           Aquí tienes una lista detallada de los plugins que utilizamos para
           mejorar tu aventura en Fantasy Survivals.
         </p>
+        <input
+          type="text"
+          id="search-plugins"
+          class="search-bar"
+          placeholder="Buscar plugin o función..."
+        />
 
         <ul class="plugins-list">
           <li>
@@ -373,16 +547,44 @@
             /spawn, /tpa), economía base, kits y chat personalizado.
           </li>
           <li>
-            <strong>EconomyShopGUI:</strong> Una interfaz gráfica intuitiva para
-            comprar y vender ítems fácilmente con la moneda del juego.
+            <strong>Vault:</strong> Gestión centralizada de la economía y
+            permisos para que los plugins interactúen entre sí.
+          </li>
+          <li>
+            <strong>Economy Shop GUI:</strong> Una interfaz gráfica intuitiva
+            para comprar y vender ítems fácilmente con la moneda del juego.
+          </li>
+          <li>
+            <strong>Nexus Auction House:</strong> Una interfaz gráfica hacer
+            subastas fácilmente con la moneda del juego.
+          </li>
+          <li>
+            <strong>Protection Stones:</strong> Aporta protecciones de zonas que
+            tienen un tamaño de una cantidad de bloques determinada.
+          </li>
+          <li>
+            <strong>Disenchantment:</strong> Si en un yunque pones algo
+            encantado y al lado un libro, se traspasaran los encantamiento a ese
+            libro.
+          </li>
+          <li>
+            <strong>Multiverse Core:</strong> Este plugin permite crear,
+            eliminar y gestionar diferentes mundos en un servidor.
           </li>
           <li>
             <strong>LuckPerms:</strong> Sistema avanzado de permisos para roles
             de jugador y staff.
           </li>
           <li>
-            <strong>Vault:</strong> Gestión centralizada de la economía y
-            permisos para que los plugins interactúen entre sí.
+            <strong>Decent Holograms:</strong> Implementa hologramas de textos.
+          </li>
+          <li>
+            <strong>Fancy Npcs:</strong> Añade npcs con muchos aspectos y
+            formar, además pueden tener funciones asignadas.
+          </li>
+          <li>
+            <strong>Core Protect:</strong> Añade un modo para el staff que ayuda
+            a ver quien rompió o puso un bloque concreto.
           </li>
         </ul>
       </div>
@@ -394,24 +596,24 @@
         <button class="popup-close" id="closePopup">&times;</button>
         <h2>Java</h2>
         <p>
-          IP: 46.26.230.23:13467
+          IP: No disponible
           <button
             class="copy-btn"
-            onclick="copyText('46.26.230.23:13467', this)"
+            onclick="copyText('No disponible', this)"
           >
             Copiar
           </button>
         </p>
         <h2>Bedrock</h2>
         <p>
-          IP: 46.26.230.23
-          <button class="copy-btn" onclick="copyText('46.26.230.23', this)">
+          IP: No disponible
+          <button class="copy-btn" onclick="copyText('No disponible', this)">
             Copiar
           </button>
         </p>
         <p>
-          Puerto: 13467
-          <button class="copy-btn" onclick="copyText('13467', this)">
+          Puerto: No disponible
+          <button class="copy-btn" onclick="copyText('No disponible', this)">
             Copiar
           </button>
         </p>
@@ -460,13 +662,27 @@
 
       // --- Copiar texto ---
       function copyText(text, btn) {
-        navigator.clipboard.writeText(text).then(() => {
-          const span = document.createElement("span");
-          span.className = "copied";
-          span.textContent = "Copiado ✅";
-          btn.after(span);
-          setTimeout(() => span.remove(), 1500);
-        });
+        const temp = document.createElement("textarea");
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+
+        try {
+          document.execCommand("copy");
+          btn.insertAdjacentHTML(
+            "afterend",
+            "<span class='copied'> Copiado ✅</span>"
+          );
+
+          setTimeout(() => {
+            const copied = btn.parentNode.querySelector(".copied");
+            if (copied) copied.remove();
+          }, 1500);
+        } catch (err) {
+          alert("Copia manual: " + text);
+        }
+
+        document.body.removeChild(temp);
       }
 
       // --- Menú hamburguesa ---
@@ -481,10 +697,6 @@
       // --- Generar tablas de comandos (como antes) ---
       const datosComandos = {
         "EssentialsX (Comandos básicos)": [
-          {
-            comando: "/help",
-            descripcion: "Muestra la lista de comandos de Essentials.",
-          },
           {
             comando: "/list",
             descripcion:
@@ -508,6 +720,10 @@
             descripcion: "Solicita teletransportarse a otro jugador.",
           },
           {
+            comando: "/tpahere [jugador]",
+            descripcion: "Solicita que otro jugador se teletransporte a tí.",
+          },
+          {
             comando: "/tpaccept",
             descripcion: "Acepta solicitudes de teletransporte.",
           },
@@ -528,7 +744,6 @@
           { comando: "/back", descripcion: "Vuelve al sitio donde moriste." },
           { comando: "/sethome [nombre]", descripcion: "Guarda un hogar." },
           { comando: "/home [nombre]", descripcion: "Te lleva a un hogar." },
-          { comando: "/delhome [nombre]", descripcion: "Elimina un hogar." },
           { comando: "/delhome [nombre]", descripcion: "Elimina un hogar." },
           {
             comando: "/balance",
@@ -753,6 +968,25 @@
           // no pasa nada si no se puede guardar
         }
       });
+
+      // --- BUSCADOR DE PLUGINS ---
+      document
+        .getElementById("search-plugins")
+        .addEventListener("input", (e) => {
+          const filtro = e.target.value.toLowerCase();
+          const plugins = document.querySelectorAll(
+            "#plugins .plugins-list li"
+          );
+
+          plugins.forEach((plugin) => {
+            const texto = plugin.textContent.toLowerCase();
+            if (texto.includes(filtro)) {
+              plugin.style.display = "block";
+            } else {
+              plugin.style.display = "none";
+            }
+          });
+        });
     </script>
 
     <script type="module">
@@ -848,7 +1082,6 @@
         const tablaDiv = document.getElementById("tabla-precios");
         tablaDiv.innerHTML = "<p>Cargando precios...</p>";
 
-        // Si ya había un listener activo, lo detenemos
         if (unsubscribe) unsubscribe();
 
         const docRef = doc(db, "precios", categoria);
@@ -865,40 +1098,17 @@
             const data = docSnap.data();
             const texto = Object.values(data)[0];
             const partes = texto.trim().split(/\s+/);
-            const items = [];
+
+            window.itemsPrecios = []; // GUARDAR ITEMS GLOBALES PARA BUSCAR
 
             for (let i = 0; i < partes.length; i += 3) {
               const nombre = partes[i];
               const compra = parseFloat(partes[i + 1]);
               const venta = parseFloat(partes[i + 2]);
-              items.push({ nombre, compra, venta });
+              window.itemsPrecios.push({ nombre, compra, venta });
             }
 
-            const tabla = document.createElement("table");
-            tabla.classList.add("command-table");
-            tabla.innerHTML = `
-          <thead>
-            <tr>
-              <th>Ítem</th>
-              <th>Precio Compra</th>
-              <th>Precio Venta</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${items
-              .map(
-                (i) => `
-                <tr>
-                  <td>${i.nombre.replaceAll("_", " ")}</td>
-                  <td>${i.compra.toFixed(2)}</td>
-                  <td>${i.venta.toFixed(2)}</td>
-                </tr>`
-              )
-              .join("")}
-          </tbody>
-        `;
-            tablaDiv.innerHTML = "";
-            tablaDiv.appendChild(tabla);
+            renderTablaPrecios(window.itemsPrecios); // render inicial completo
           },
           (error) => {
             console.error("Error en tiempo real:", error);
@@ -908,10 +1118,104 @@
         );
       }
 
+      function renderTablaPrecios(lista) {
+        const tablaDiv = document.getElementById("tabla-precios");
+
+        const tabla = document.createElement("table");
+        tabla.classList.add("command-table");
+
+        tabla.innerHTML = `
+    <thead>
+      <tr>
+        <th>Ítem</th>
+        <th>Precio Compra</th>
+        <th>Precio Venta</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${lista
+        .map(
+          (i) => `
+          <tr>
+            <td>${i.nombre.replaceAll("_", " ")}</td>
+            <td>${i.compra.toFixed(2)}€</td>
+            <td>${i.venta.toFixed(2)}€</td>
+          </tr>`
+        )
+        .join("")}
+    </tbody>
+  `;
+
+        tablaDiv.innerHTML = "";
+        tablaDiv.appendChild(tabla);
+      }
+
       // --- Cuando se abra la sección "Precios Tienda" ---
       document
         .querySelector("a[onclick=\"showSection('precios')\"]")
         .addEventListener("click", crearDropdown);
+
+      document
+        .getElementById("search-precio")
+        .addEventListener("input", (e) => {
+          const filtro = e.target.value.toLowerCase();
+
+          if (!window.itemsPrecios) return;
+
+          const filtrados = window.itemsPrecios.filter((item) => {
+            return (
+              item.nombre.toLowerCase().includes(filtro) ||
+              item.compra.toString().includes(filtro) ||
+              item.venta.toString().includes(filtro)
+            );
+          });
+
+          renderTablaPrecios(filtrados);
+        });
+      // Establece la fecha objetivo: 29 de noviembre de 2025 a medianoche (hora local del navegador)
+      const targetDate = new Date("November 29, 2025 00:00:00").getTime();
+
+      // Actualiza el contador cada segundo
+      const countdownInterval = setInterval(updateCountdown, 1000);
+
+      function updateCountdown() {
+        const now = new Date().getTime(); // Hora actual
+        const timeDifference = targetDate - now; // Diferencia en milisegundos
+
+        // Calcula días, horas, minutos y segundos
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        // Muestra los resultados en los elementos HTML correspondientes
+        if (timeDifference >= 0) {
+          document.getElementById("days").textContent = formatTime(days);
+          document.getElementById("hours").textContent = formatTime(hours);
+          document.getElementById("minutes").textContent = formatTime(minutes);
+          document.getElementById("seconds").textContent = formatTime(seconds);
+        } else {
+          // Si la fecha ya pasó, detiene el contador y muestra un mensaje
+          clearInterval(countdownInterval);
+          document.getElementById("days").textContent = "00";
+          document.getElementById("hours").textContent = "00";
+          document.getElementById("minutes").textContent = "00";
+          document.getElementById("seconds").textContent = "00";
+          document.getElementById("countdown-message").style.display = "block";
+        }
+      }
+
+      // Función para añadir un cero delante de números menores a 10 (formato "00")
+      function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
+      }
+
+      // Llamada inicial a la función para evitar un retraso de 1 segundo al cargar la página
+      updateCountdown();
     </script>
   </body>
 </html>
