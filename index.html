@@ -34,9 +34,12 @@
         background: linear-gradient(90deg, #2c3e50, #1c8082);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         overflow: hidden;
-        padding: 10px 0;
+        padding: 10px 20px;
         text-align: center;
         z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
       .navbar a {
@@ -70,14 +73,24 @@
       /* Menú móvil */
       .navbar-links {
         display: flex;
+        gap: 6px;
+        align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
+        flex: 1;
       }
 
       .navbar.active .navbar-links {
         display: block;
         text-align: left;
         background: #2c3e50;
+      }
+
+      .navbar-actions {
+        display: flex;
+        margin-left: 20px;
+        gap: 10px;
+        align-items: center;
+        justify-content: flex-end;
       }
 
       /* Contenido principal */
@@ -268,6 +281,16 @@
         border: none;
       }
 
+      .popup .search-bar {
+        box-sizing: border-box;
+      }
+
+      .popup input.search-bar {
+        width: 100%;
+        max-width: 100%;
+        display: block;
+      }
+
       .copied {
         color: var(--color-button);
         font-size: 0.85em;
@@ -315,6 +338,91 @@
 
       .countdown small {
         font-size: 0.8em;
+      }
+
+      .btn-login {
+        padding: 8px 14px;
+        background-color: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .btn-login:hover {
+        background-color: var(--color-button-hover);
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-wrap: nowrap;
+          height: auto;
+          padding: 10px 15px;
+          position: relative;
+          overflow: visible;
+        }
+
+        .navbar-links {
+          position: absolute;
+          top: 45px;
+          left: 10px;
+          background: #2c3e50;
+          flex-direction: column;
+          padding: 8px 0;
+          display: none;
+          z-index: 1500;
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+          width: auto;
+          min-width: 160px;
+          max-width: 85vw;
+          border-radius: 8px;
+        }
+
+        .navbar-links a {
+          display: block;
+          text-align: center;
+          padding: 12px 18px;
+          font-size: 16px;
+          width: 100%;
+          white-space: nowrap;
+        }
+
+        .navbar.active .navbar-links {
+          display: flex;
+        }
+
+        .navbar-actions {
+          margin-left: auto;
+        }
+
+        .navbar {
+          position: relative; /* importante para que el menú absoluto funcione */
+          overflow: visible; /* evita cortes */
+        }
+
+        .menu-toggle {
+          display: block;
+          position: relative;
+          left: 0;
+          top: 0;
+          margin-right: 10px;
+        }
+
+        /* Hover CORRECTO dentro del dropdown móvil */
+        .navbar-links a:hover {
+          transform: none !important;
+          background-color: rgba(255, 255, 255, 0.15) !important;
+          width: 100% !important; /* 🔥 evita que el hover sobresalga */
+          box-sizing: border-box !important;
+        }
+
+        .search-bar {
+          width: 100% !important;
+          box-sizing: border-box !important;
+          max-width: 100% !important;
+        }
       }
 
       /* 🌙 MODO OSCURO AUTOMÁTICO */
@@ -424,6 +532,14 @@
         <a onclick="showSection('comandos')">Comandos</a>
         <a onclick="showSection('plugins')">Plugins</a>
       </div>
+
+      <!-- BOTONES LOGIN / LOGOUT dentro del navbar -->
+      <div class="navbar-actions">
+        <button id="loginBtn" class="btn-login">Login</button>
+        <button id="logoutBtn" class="btn-login" style="display: none">
+          Cerrar sesión
+        </button>
+      </div>
     </div>
 
     <!-- Contenido Principal -->
@@ -527,6 +643,20 @@
         <div id="comandos-container"></div>
       </div>
 
+      <!-- Sección de Comandos Staff-->
+      <div id="comandos-staff" class="content-section">
+        <h1>Comandos Staff</h1>
+
+        <input
+          type="text"
+          id="search-comandos-staff"
+          class="search-bar"
+          placeholder="Buscar comando STAFF"
+        />
+
+        <div id="comandos-staff-container"></div>
+      </div>
+
       <!-- Sección de Plugins -->
       <div id="plugins" class="content-section">
         <h1>Plugins y sus Funciones</h1>
@@ -597,10 +727,7 @@
         <h2>Java</h2>
         <p>
           IP: No disponible
-          <button
-            class="copy-btn"
-            onclick="copyText('No disponible', this)"
-          >
+          <button class="copy-btn" onclick="copyText('No disponible', this)">
             Copiar
           </button>
         </p>
@@ -616,6 +743,31 @@
           <button class="copy-btn" onclick="copyText('No disponible', this)">
             Copiar
           </button>
+        </p>
+      </div>
+    </div>
+
+    <!-- POPUP LOGIN -->
+    <div class="popup-overlay" id="loginPopup">
+      <div class="popup">
+        <button class="popup-close" id="closeLoginPopup">&times;</button>
+        <h2>Login Staff</h2>
+
+        <label>Usuario:</label>
+        <input type="text" id="loginUser" class="search-bar" />
+
+        <label>Contraseña:</label>
+        <input type="password" id="loginPass" class="search-bar" />
+
+        <button id="loginSend" class="btn-login" style="width: 100%">
+          Entrar
+        </button>
+
+        <p
+          id="loginError"
+          style="color: red; display: none; text-align: center"
+        >
+          Usuario o contraseña incorrectos
         </p>
       </div>
     </div>
@@ -846,6 +998,64 @@
         ],
       };
 
+      // --- Comandos Staff ---
+      const datosComandosStaff = {
+        "Decent Holograms": [
+          {
+            comando: "/dh create [nombre] [texto]",
+            descripcion:
+              "Crea un holograma en el bloque de debajo de dondes estas",
+          },
+          {
+            comando: "/dh delete [nombre]",
+            descripcion: "Elimina un holograma",
+          },
+          {
+            comando: "/dh center [nombre]",
+            descripcion: "Centra el holograma en el bloque en el que está",
+          },
+          {
+            comando: "/dh line add [nombre]",
+            descripcion: "Añade una nueva línea al holograma que pongas",
+          },
+          {
+            comando: "/dh line edit [nombre] 1 [nº de la fila]",
+            descripcion: "Edita una línea",
+          },
+          {
+            comando: "/dh line delete [nombre] 1 [nº de la fila]",
+            descripcion: "Elimina una línea",
+          },
+          {
+            comando: "/dh move [nombre] [x] [y] [z]",
+            descripcion: "Mueve un holograma",
+          },
+        ],
+        "Fancy Npcs": [
+          {
+            comando: "/npc create [nombre]",
+            descripcion: "Crea un npc donde estas",
+          },
+          { comando: "/npc center [nombre]", descripcion: "Centra el npc" },
+          {
+            comando: "/npc move [nombre] [x] [y] [z]",
+            descripcion: "Mueve un npc",
+          },
+          {
+            comando: "/npc movehere [nombre]",
+            descripcion: "Mueve un npc a tu posición",
+          },
+          {
+            comando: "/npc displayname [nombre] [texto]",
+            descripcion: "Cambia el nombre visual",
+          },
+          {
+            comando: "/npc skin [nombre] [skin]",
+            descripcion: "Cambia la skin del npc",
+          },
+        ],
+      };
+
       function generarTablasComandos(filtro = "") {
         const container = document.getElementById("comandos-container");
         container.innerHTML = ""; // limpiar
@@ -896,6 +1106,58 @@
   <td>${item.descripcion}</td>
 `;
 
+            tbody.appendChild(row);
+          });
+
+          container.appendChild(table);
+        }
+
+        if (container.innerHTML.trim() === "") {
+          container.innerHTML = "<p>No se encontraron comandos.</p>";
+        }
+      }
+
+      function generarTablasComandosStaff(filtro = "") {
+        const container = document.getElementById("comandos-staff-container");
+        container.innerHTML = "";
+
+        const filtroLower = filtro.toLowerCase();
+
+        for (const categoria in datosComandosStaff) {
+          const comandos = datosComandosStaff[categoria];
+
+          const coinciden = comandos.filter((item) => {
+            const cmd = item.comando.toLowerCase();
+            const desc = item.descripcion.toLowerCase();
+            const cat = categoria.toLowerCase();
+            return (
+              cmd.includes(filtroLower) ||
+              desc.includes(filtroLower) ||
+              cat.includes(filtroLower)
+            );
+          });
+
+          if (coinciden.length === 0) continue;
+
+          const title = document.createElement("h2");
+          title.textContent = categoria;
+          container.appendChild(title);
+
+          const table = document.createElement("table");
+          table.classList.add("command-table");
+          table.innerHTML = `
+      <thead><tr><th>Comando</th><th>Descripción</th></tr></thead>
+      <tbody></tbody>
+    `;
+
+          const tbody = table.querySelector("tbody");
+
+          coinciden.forEach((item) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+        <td><code class="code-copy" onclick="copyText('${item.comando}', this)">${item.comando}</code></td>
+        <td>${item.descripcion}</td>
+      `;
             tbody.appendChild(row);
           });
 
@@ -987,6 +1249,47 @@
             }
           });
         });
+
+      document
+        .getElementById("search-comandos-staff")
+        .addEventListener("input", (e) => {
+          generarTablasComandosStaff(e.target.value);
+        });
+
+      // --- CERRAR POPUPS Y DROPDOWN AL HACER CLICK FUERA --- //
+      document.addEventListener("click", (e) => {
+        const navbar = document.getElementById("navbar");
+        const dropdown = document.querySelector(".navbar-links");
+        const menuBtn = document.getElementById("menuToggle");
+
+        // ⛔ 1. Cerrar popup de IP si se hace click fuera
+        const popupOverlay = document.getElementById("popupOverlay");
+        if (
+          popupOverlay.style.display === "flex" &&
+          !popupOverlay.querySelector(".popup").contains(e.target) &&
+          !openBtn.contains(e.target)
+        ) {
+          popupOverlay.style.display = "none";
+        }
+
+        // ⛔ 2. Cerrar popup LOGIN si se hace click fuera
+        if (
+          loginPopup.style.display === "flex" &&
+          !loginPopup.querySelector(".popup").contains(e.target) &&
+          !loginBtn.contains(e.target)
+        ) {
+          loginPopup.style.display = "none";
+        }
+
+        // ⛔ 3. Cerrar dropdown móvil si se hace click fuera
+        if (
+          navbar.classList.contains("active") &&
+          !dropdown.contains(e.target) &&
+          !menuBtn.contains(e.target)
+        ) {
+          navbar.classList.remove("active");
+        }
+      });
     </script>
 
     <script type="module">
@@ -1012,6 +1315,13 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+
+      // 🔥 SIEMPRE cerrar sesión y limpiar inputs al entrar en la página
+      sessionStorage.removeItem("staffLogged");
+
+      // Eliminar el enlace de staff si quedó de una sesión anterior
+      const oldLink = document.getElementById("staffLink");
+      if (oldLink) oldLink.remove();
 
       let unsubscribe = null; // Para detener el listener anterior al cambiar de categoría
 
@@ -1206,6 +1516,101 @@
           document.getElementById("minutes").textContent = "00";
           document.getElementById("seconds").textContent = "00";
           document.getElementById("countdown-message").style.display = "block";
+        }
+      }
+
+      // --- LOGIN STAFF ---
+      import { getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const loginPopup = document.getElementById("loginPopup");
+      const closeLoginPopup = document.getElementById("closeLoginPopup");
+      const loginSend = document.getElementById("loginSend");
+      const loginError = document.getElementById("loginError");
+      loginBtn.style.display = "inline-block";
+      logoutBtn.style.display = "none";
+
+      // Limpiar inputs
+      document.getElementById("loginUser").value = "";
+      document.getElementById("loginPass").value = "";
+
+      loginBtn.onclick = () => (loginPopup.style.display = "flex");
+      closeLoginPopup.onclick = () => (loginPopup.style.display = "none");
+
+      loginSend.onclick = async () => {
+        const user = loginUser.value.trim();
+        const pass = loginPass.value.trim();
+
+        if (!user || !pass) return;
+
+        const ref = doc(db, "staff", user);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists() || snap.data().password !== pass) {
+          loginError.style.display = "block";
+          return;
+        }
+
+        // LOGIN CORRECTO
+        sessionStorage.setItem("staffLogged", "true");
+        loginPopup.style.display = "none";
+        loginError.style.display = "none";
+        mostrarStaffUI();
+      };
+
+      logoutBtn.onclick = () => {
+        sessionStorage.removeItem("staffLogged");
+        ocultarStaffUI();
+      };
+
+      function mostrarStaffUI() {
+        // esconder/mostrar botones
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+
+        // Si ya existe el link, no lo añadimos otra vez
+        if (!document.getElementById("staffLink")) {
+          // Crear enlace igual que los otros <a>
+          const link = document.createElement("a");
+          link.id = "staffLink";
+          link.textContent = "Comandos Staff";
+          link.href = "javascript:void(0)";
+          link.onclick = () => showSection("comandos-staff");
+
+          // Insertarlo justo ANTES del enlace de "Comandos" (para que quede a la izquierda)
+          const navbarLinks = document.querySelector(".navbar-links");
+          // buscar el enlace "Comandos" existente
+          const comandosLink = Array.from(
+            navbarLinks.querySelectorAll("a")
+          ).find(
+            (a) => a.getAttribute("onclick") === "showSection('comandos')"
+          );
+
+          if (comandosLink) {
+            navbarLinks.insertBefore(link, comandosLink);
+          } else {
+            // si no encontramos "Comandos", añadir al final
+            navbarLinks.appendChild(link);
+          }
+        }
+
+        // Generar tabla STAFF para cuando el usuario haga click en esa sección
+        generarTablasComandosStaff();
+      }
+
+      function ocultarStaffUI() {
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+
+        const link = document.getElementById("staffLink");
+        if (link) link.remove();
+
+        // Si el usuario estaba en la sección comandos-staff, cambiar a 'home' para evitar ver contenido oculto
+        const active = document.querySelector(".content-section.active");
+        if (active && active.id === "comandos-staff") {
+          showSection("home");
+          localStorage.setItem("activeSection", "home");
         }
       }
 
