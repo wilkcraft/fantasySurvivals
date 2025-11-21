@@ -647,7 +647,11 @@
 
       <!-- Sección de Comandos Staff-->
       <div id="comandos-staff" class="content-section">
-        <h1>Comandos Staff</h1>
+        <h1>Comandos disponibles para el Staff</h1>
+        <p>
+          Aquí están todos los comandos útiles para el Staff, organizados por
+          plugins:
+        </p>
 
         <input
           type="text"
@@ -1014,34 +1018,19 @@
         ],
         "Auction House": [
           {
-            comando: "/ah admin",
-            descripcion:
-              "Abre el menú de administración (GUI) de la casa de subastas. Desde aquí, los administradores a menudo pueden hacer clic en los artículos para eliminarlos.",
-          },
-          {
             comando: "/ah logs",
             descripcion:
               "Abre el registro de artículos vendidos y transacciones pasadas para su revisión.",
           },
           {
-            comando: "/ah ban [jugador]:",
+            comando: "/ah ban [jugador]",
             descripcion:
               "Prohíbe a un jugador específico usar la casa de subastas.",
           },
           {
-            comando: "/ah unban [jugador]:",
+            comando: "/ah unban [jugador]",
             descripcion:
               "Elimina la prohibición de un jugador para que pueda volver a usar la casa de subastas.",
-          },
-          {
-            comando: "/ah admin endall",
-            descripcion:
-              "Finaliza todas las subastas activas actualmente en el servidor.",
-          },
-          {
-            comando: "/ah admin clear [jugador]",
-            descripcion:
-              "Elimina todos los artículos de un jugador específico, con opciones para devolverles los artículos o el dinero.",
           },
         ],
         "Decent Holograms": [
@@ -1096,73 +1085,6 @@
           {
             comando: "/npc skin [nombre] [skin]",
             descripcion: "Cambia la skin del npc",
-          },
-        ],
-        "Simple Portals": [
-          {
-            comando: "/sp sm",
-            descripcion:
-              "Puedes seleccionar la región de tu portal haciendo clic izquierdo en la primera esquina y clic derecho en la segunda esquina.",
-          },
-          {
-            comando: "/sp create [nombre]",
-            descripcion: "Crea un portal entre mundos o lugares",
-          },
-          {
-            comando: "/sp delete [nombre]",
-            descripcion: "Elimina el portal especificado.",
-          },
-          {
-            comando: "/sp list",
-            descripcion:
-              "Muestra una lista de todos los portales creados en el servidor.",
-          },
-          {
-            comando: "/sp sl [nombre]",
-            descripcion:
-              "Establece tu ubicación actual como el destino de teletransporte del portal especificado.",
-          },
-          {
-            comando: "/sp sr [nombre]",
-            descripcion: "Muestra la ubicación y región exactas del portal.",
-          },
-          {
-            comando: "/sp disable [nombre]",
-            descripcion:
-              "Desactiva un portal sin eliminarlo, impidiendo que los jugadores lo usen.",
-          },
-          {
-            comando: "/sp enable [nombre]",
-            descripcion: "Vuelve a activar un portal previamente desactivado.",
-          },
-          {
-            comando: "/sp addcommand [nombre]",
-            descripcion:
-              "Añade un comando que se ejecutará cuando un jugador entre en el portal.",
-          },
-          {
-            comando: "/sp clearcommands [nombre]",
-            descripcion: "Elimina todos los comandos asociados a un portal.",
-          },
-          {
-            comando: "/sp viewcommands [nombre]",
-            descripcion:
-              "Permite ver los comandos configurados para un portal.",
-          },
-          {
-            comando: "/sp togglecommandonly [nombre]",
-            descripcion:
-              "Alterna el modo 'solo comando', donde el portal solo ejecuta comandos y no teletransporta.",
-          },
-          {
-            comando: "/sp message [nombre]",
-            descripcion:
-              "Configura mensajes personalizados para el portal (p. ej., mensajes en la barra de acción, subtítulos, etc.).",
-          },
-          {
-            comando: "/sp dm [nombre]",
-            descripcion:
-              "Desactiva todos los mensajes asociados al portal especificado.",
           },
         ],
       };
